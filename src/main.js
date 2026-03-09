@@ -249,25 +249,60 @@ document.addEventListener('DOMContentLoaded', () => {
   const horoscopeText = document.getElementById('horoscopeText');
   const signSelect = document.getElementById('signSelect');
 
+  // Inlocuim API-ul care nu mai functioneaza cu generare algoritmica offline pentru a garanta functionalitatea pe toate platformele fara probleme de CORS.
+  const horoscopePredictions = {
+    ro: [
+      "Astăzi este o zi excelentă pentru a lua decizii îndrăznețe. Norocul îți surâde la prima ceașcă de cafea!",
+      "Astrele indică o surpriză plăcută în a doua parte a zilei. Fii deschis la noutăți.",
+      "O persoană dragă îți va da o veste excelentă. Răsfață-te cu o prăjitură alături de cafea.",
+      "Creativitatea ta este la cote maxime astăzi. Gândește dincolo de tipare!",
+      "Nu lăsa stresul să te copleșească. Ia o pauză binemeritată și bucură-te de aroma cafelei tale preferate.",
+      "O întâlnire neașteptată s-ar putea lăsa cu o oportunitate fantastică de carieră.",
+      "Finanțele tale primesc un impuls favorabil azi. Este timpul să pui acel plan în acțiune.",
+      "Ai o aură plină de energie pozitivă. Orice proiect începi astăzi va avea un succes remarcabil.",
+      "Bucură-te de lucrurile mărunte. Călătoria este la fel de importantă ca destinația.",
+      "Curajul tău va fi răsplătit în curând. Păstrează-ți încrederea și mergi mai departe.",
+      "Răbdarea ta de azi se va transforma într-o mare reușită mâine.",
+      "O zi perfectă pentru a petrece timp cu cei care îți aduc bucurie. Savurați un moment frumos împreună."
+    ],
+    en: [
+      "Today is an excellent day to make bold decisions. Luck smiles at you with your first cup of coffee!",
+      "The stars indicate a pleasant surprise in the second half of the day. Be open to new things.",
+      "A loved one will give you excellent news. Treat yourself to a pastry with your coffee.",
+      "Your creativity is at an all-time high today. Think outside the box!",
+      "Don't let stress overwhelm you. Take a well-deserved break and enjoy the aroma of your favorite coffee.",
+      "An unexpected meeting could turn into a fantastic career opportunity.",
+      "Your finances are getting a favorable boost today. It's time to put that plan into action.",
+      "You have an aura full of positive energy. Every project you start today will be remarkably successful.",
+      "Enjoy the little things. The journey is just as important as the destination.",
+      "Your courage will be rewarded soon. Keep your confidence and keep moving forward.",
+      "Your patience today will turn into a great success tomorrow.",
+      "A perfect day to spend time with those who bring you joy. Savor a beautiful moment together."
+    ]
+  };
+
   async function fetchHoroscope(sign) {
     if (!horoscopeText) return;
     horoscopeText.textContent = translations[currentLang]['horoscope.fetching'];
     horoscopeText.classList.add('loading');
 
-    try {
-      const url = `https://ohmanda.com/api/horoscope/${sign}`;
-      // Use standard allorigins proxy to bypass CORS
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-      const response = await fetch(proxyUrl);
-      const data = await response.json();
-      
-      const horoscopeData = JSON.parse(data.contents);
-      horoscopeText.textContent = horoscopeData.horoscope || translations[currentLang]['horoscope.error'];
+    setTimeout(() => {
+      try {
+        const today = new Date();
+        const dateString = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+        
+        // Sum the char codes of the date string and sign to get a consistent pseudo-random index for the day
+        const seed = Array.from(dateString + sign).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        
+        const langArray = horoscopePredictions[currentLang] || horoscopePredictions['ro'];
+        const prediction = langArray[seed % langArray.length];
+        
+        horoscopeText.textContent = prediction;
+      } catch (err) {
+        horoscopeText.textContent = translations[currentLang]['horoscope.error'];
+      }
       horoscopeText.classList.remove('loading');
-    } catch (err) {
-      horoscopeText.textContent = translations[currentLang]['horoscope.error'];
-      horoscopeText.classList.remove('loading');
-    }
+    }, 600); // Simulate brief loading
   }
 
   if (signSelect) {
