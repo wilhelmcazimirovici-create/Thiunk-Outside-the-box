@@ -191,10 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- Scroll Reveal (IntersectionObserver) ---
-  const revealElements = document.querySelectorAll('section, .glass-panel, .gallery-item, .testimonial-card');
+  const revealElements = document.querySelectorAll('section, .glass-panel, .testimonial-card');
   
   revealElements.forEach(el => {
-    if (!el.classList.contains('main-header') && !el.classList.contains('hero-section')) {
+    if (!el.classList.contains('main-header') && !el.classList.contains('hero-section') && !el.closest('.gallery-track')) {
       el.classList.add('reveal');
     }
   });
