@@ -294,12 +294,34 @@ document.addEventListener('DOMContentLoaded', () => {
         // Sum the char codes of the date string and sign to get a consistent pseudo-random index for the day
         const seed = Array.from(dateString + sign).reduce((acc, char) => acc + char.charCodeAt(0), 0);
         
-        const langArray = horoscopePredictions[currentLang] || horoscopePredictions['ro'];
-        const prediction = langArray[seed % langArray.length];
+        // Define the 5 categories we want to display
+        const categories = ['general', 'love', 'career', 'friends', 'health'];
         
-        horoscopeText.textContent = prediction;
+        let htmlContent = `<div class="horoscope-grid">`;
+        
+        categories.forEach((cat, index) => {
+          // Unique seed per category by multiplying the base seed by (index + 1)
+          const catSeed = seed * (index + 1);
+          const langArray = horoscopePredictions[currentLang] || horoscopePredictions['ro'];
+          const prediction = langArray[catSeed % langArray.length];
+          const catName = translations[currentLang][`horoscope.cat.${cat}`];
+          const catIcon = translations[currentLang][`horoscope.icon.${cat}`];
+          
+          htmlContent += `
+            <div class="horoscope-card">
+              <div class="horo-card-header">
+                <span class="horo-icon">${catIcon}</span>
+                <h4 class="horo-title">${catName}</h4>
+              </div>
+              <p class="horo-desc">${prediction}</p>
+            </div>
+          `;
+        });
+        htmlContent += `</div>`;
+        
+        horoscopeText.innerHTML = htmlContent;
       } catch (err) {
-        horoscopeText.textContent = translations[currentLang]['horoscope.error'];
+        horoscopeText.innerHTML = `<p>${translations[currentLang]['horoscope.error']}</p>`;
       }
       horoscopeText.classList.remove('loading');
     }, 600); // Simulate brief loading

@@ -301,8 +301,6 @@ section {
   margin-bottom: 3rem;
   position: relative;
   display: inline-block;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .section-title::after {
@@ -497,16 +495,63 @@ section {
   justify-content: center;
 }
 
-.horoscope-text {
-  font-style: italic;
+.horoscope-content {
   font-size: 1.1rem;
   line-height: 1.8;
   color: var(--text-secondary);
+  width: 100%;
+}
+
+.horoscope-content.loading {
+  opacity: 0.5;
+  text-align: center;
+}
+
+.horoscope-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  text-align: left;
+  width: 100%;
+}
+
+.horoscope-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: var(--transition);
+}
+
+.horoscope-card:hover {
+  background: rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+  border-color: rgba(212, 163, 115, 0.2);
+}
+
+.horo-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.75rem;
+}
+
+.horo-icon {
+  font-size: 1.2rem;
+}
+
+.horo-title {
+  color: var(--accent-color);
+  font-size: 1.1rem;
   margin: 0;
 }
 
-.horoscope-text.loading {
-  opacity: 0.5;
+.horo-desc {
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.6;
 }
 
 /* --- About Section --- */
@@ -531,23 +576,20 @@ section {
 }
 
 .about-images {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  display: flex;
+  justify-content: center;
 }
 
 .about-image-wrapper {
   position: relative;
   padding: 0.5rem;
   overflow: hidden;
+  max-width: 400px;
+  width: 100%;
 }
 
-.about-image-wrapper:first-child {
-  aspect-ratio: 3/4;
-}
-
-.about-image-wrapper:last-child {
-  aspect-ratio: 3/4;
+.about-image-wrapper {
+  aspect-ratio: 4/5;
 }
 
 .about-img {
